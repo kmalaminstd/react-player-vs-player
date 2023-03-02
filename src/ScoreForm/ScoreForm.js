@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-function ScoreForm({ setGameScore }) {
+function ScoreForm({ endGame, setGameScore }) {
 
   const [score, setScore] = useState('')
 
@@ -15,8 +15,8 @@ function ScoreForm({ setGameScore }) {
   return (
     <div className="scoreform">
         <form onSubmit={formData}>
-            <input onChange={(e)=> setScore(e.target.value)} value={score} type="number" />
-            <button>Submit</button>
+            <input disabled={endGame} onChange={(e)=> setScore(e.target.value)} value={score} type="number" />
+            <button disabled={endGame}>Submit</button>
         </form>
     </div>
   )

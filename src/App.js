@@ -2,7 +2,8 @@ import './App.css'
 import WinningScore from './WinningScore/WinningScore';
 import Players from './Players/Players';
 import ScoreForm from './ScoreForm/ScoreForm';
-import Winner from './Winner/Winner';
+// import Winner from './Winner/Winner';
+import GameOver from './GameOver/GameOver';
 
 
 import { useState } from 'react';
@@ -15,6 +16,7 @@ function App() {
   const [winPlayer, setWinPlayer] = useState(null)
   const [playerOneScore, setPlayerOneScore] = useState(0)
   const [playerTwoScore, setPlayerTwoScore] = useState(0)
+  const [endGame, setEndGame] = useState(false)
 
   const setGameScore = (e) => {
     if(e){
@@ -32,10 +34,11 @@ function App() {
     setPlayerTwo(false)
     let num = randomNumberGen()
     setPlayerOneScore(num)
-    if(num === 20){
+    if(Number(winScore) === Number(num)){
       setPlayerOne(true)
       setPlayerTwo(true)
       setWinPlayer('Player One is Winner')
+      setEndGame(true)
     }
   }
 
@@ -44,10 +47,12 @@ function App() {
     setPlayerOne(false)
     let num = randomNumberGen()
     setPlayerTwoScore(num)
-    if(num === 20){
+    console.log(winScore, num);
+    if(Number(winScore) === Number(num)){
       setPlayerOne(true)
       setPlayerTwo(true)
       setWinPlayer('Player Two is Winner')
+      setEndGame(true)
     }
   }
 
@@ -60,8 +65,25 @@ function App() {
     setPlayerTwoScore(0)
   }
 
+  const startAgain = () => {
+    setEndGame(false)
+    setWinScore(20)
+    setPlayerOne(false)
+    setPlayerTwo(false)
+    setWinPlayer(null)
+    setPlayerOneScore(0)
+    setPlayerTwoScore(0)
+  }
+
   return(
     <>
+
+    
+      {
+        endGame && winPlayer && <GameOver startAgain={startAgain} winPlayer={winPlayer} />
+      }
+     
+
       <div className="main">
         <div className="topbar">
           <h1>Player v/s Player</h1>
@@ -71,19 +93,19 @@ function App() {
         <Players playerOneScore={playerOneScore} playerTwoScore={playerTwoScore} />
 
 
-          <div>
+          {/* <div>
             {
               winPlayer && <Winner winPlayer={winPlayer} /> 
             }
-          </div>
+          </div> */}
 
-        <ScoreForm setGameScore={setGameScore} />
+        <ScoreForm endGame={endGame} setGameScore={setGameScore} />
 
         <div className="playerbtn">
           <button onClick={playerOneHandle} disabled={playerOne}>Player One</button>
           <button onClick={playerTwoHandle} disabled={playerTwo}>Player Two</button>
             <div style={{marginTop: '10px'}}>
-              <button onClick={() => resetFunc()}> Reset</button>
+              <button disabled={endGame} onClick={() => resetFunc()}> Reset</button>
             </div>
         </div>
 
